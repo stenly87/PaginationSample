@@ -50,7 +50,9 @@ namespace PaginationSample
             InitializeComponent();
             DataContext = this;
             int rowsOnPage = 2;
-            paginator = new Paginator<Curator>("SELECT * FROM curator", rowsOnPage,
+            paginator = new Paginator<Curator>(
+                "SELECT * FROM curator",
+                rowsOnPage,
                 s => new Curator { 
                     ID = s.GetInt32("id"),
                     FirstName = s.GetString("firstName"), 
