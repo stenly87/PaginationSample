@@ -13,7 +13,7 @@ namespace PaginationSample
         private int countRows;
         private readonly Func<MySqlDataReader, T> funcGetObject;
         private readonly string table;
-
+        
         public int PageIndex
         {
             get => pageIndex;

@@ -58,10 +58,7 @@ namespace PaginationSample
                 "curator"
                 );
 
-            int count = rowsOnPage * paginator.CountPages;
-            ViewRowsVariants = new List<int>();
-            for (int i = 0; i < count; i += 2)
-                ViewRowsVariants.Add(i+2);
+            ViewRowsVariants = new List<int>() { 5, 10, 15 };
 
             buttonToStart(this, null);
         }
