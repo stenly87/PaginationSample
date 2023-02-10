@@ -19,8 +19,8 @@ namespace PaginationSample
             get => pageIndex;
             set
             { 
-                if (value > countPage - 1)
-                    value = countPage - 1;
+                if (value > countPage)
+                    value = countPage;
                 if (value < 0)
                     value = 0;
                 pageIndex = value;
