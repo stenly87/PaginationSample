@@ -33,6 +33,69 @@ namespace PaginationSample
                 sb.ToString());
         }
 
+        internal List<Prepod>? GetPrepods(string prepodFilter)
+        {
+            List<Prepod> result = new List<Prepod>();
+            if (OpenConnection())
+            {
+                string sql = $"select * from tbl_prepods where firstName like '%{prepodFilter}%' or lastName like '%{prepodFilter}%'";
+                using (var mc = new MySqlCommand(
+                    sql, Connection))
+                using (var dr = mc.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+
+                        result.Add(new Prepod {
+                         ID = dr.GetInt32("id"),
+                         LastName = dr.GetString("lastName"),
+                         FirstName = dr.GetString("firstName")
+                        });
+                    }
+                }
+               CloseConnection();
+            }
+            return result;
+        }
+
+        internal bool CreatePrepodDisciplineCross(Prepod selectedPrepod, Discipline selectedDiscipline, DayOfWeek selectedDay)
+        {
+            int rows = 0;
+            if (OpenConnection())
+            {
+                string sql = "insert into crossPrepodDiscipline " +
+                    $"(idPrepod, idDiscipline, dayOfWeek) values ({selectedPrepod.ID}, {selectedDiscipline.ID}, {(int)selectedDay})";
+                rows = MySqlHelper.ExecuteNonQuery(connection, sql);
+                CloseConnection();
+            }
+            return rows > 0;
+        }
+
+        internal List<Discipline>? GetDisciplines(string disciplineFilter)
+        {
+            List<Discipline> result = new List<Discipline>();
+            if (OpenConnection())
+            {
+                string sql = $"select * from tbl_discipline where title like '%{disciplineFilter}%'";
+                using (var mc = new MySqlCommand(
+                    sql, Connection))
+                using (var dr = mc.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+
+                        result.Add(new Discipline
+                        {
+                            ID = dr.GetInt32("id"),
+                            Title = dr.GetString("title"),
+                        });
+                    }
+                }
+                CloseConnection();
+            }
+            return result;
+        }
+
         public bool OpenConnection()
         {
             if (connection == null)

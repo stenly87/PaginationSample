@@ -9,7 +9,9 @@ namespace PaginationSample
 {
     internal class Paginator<T>
     {
-        private readonly string query;
+        private string query;
+        public string Query { get => query; set => query = value; }
+
         private int countRows;
         private readonly Func<MySqlDataReader, T> funcGetObject;
         private readonly string table;
@@ -44,7 +46,7 @@ namespace PaginationSample
 
         public Paginator(string query, int countRows, Func<MySqlDataReader, T> funcGetObject, string table)
         {
-            this.query = query;
+            this.Query = query;
             this.countRows = countRows;
             this.funcGetObject = funcGetObject;
             this.table = table;
@@ -72,7 +74,7 @@ namespace PaginationSample
             if (db.OpenConnection())
             {
                 using (var mc = new MySqlCommand(
-                    query +
+                    Query +
                     $" LIMIT {PageIndex * CountRows}, {CountRows}",
                     db.Connection))
                 using (var dr = mc.ExecuteReader())

@@ -13,10 +13,16 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding Curators}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Поиск по имени и фамилии:"/>
+            <TextBox Text="{Binding SearchText}" Width="150"/>
+            <Button Content="Ищи" Click="Button_Click"/>
+        </StackPanel>
+        <ListView Grid.Row="1" ItemsSource="{Binding Curators}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding FirstName}"/>
@@ -24,7 +30,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <ComboBox ItemsSource="{Binding ViewRowsVariants}" SelectedItem="{Binding ViewRowsCount}"/>
             <Button Content="В начало" Click="buttonToStart"/>
             <Button Content="Назад" Click="buttonBack"/>

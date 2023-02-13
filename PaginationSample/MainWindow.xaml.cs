@@ -44,6 +44,8 @@ namespace PaginationSample
             }
         }
 
+        public string SearchText { get; set; }
+
         Paginator<Curator> paginator;
         public MainWindow()
         {
@@ -91,6 +93,12 @@ namespace PaginationSample
         {
             paginator.PageIndex = int.MaxValue;
             Curators = paginator.GetPageValues();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            paginator.Query = $"SELECT* FROM curator WHERE lastName LIKE '%{SearchText}%' or firstName LIKE '%{SearchText}%'";
+            buttonToStart(this, new RoutedEventArgs());
         }
     }
 }
