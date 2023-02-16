@@ -1,0 +1,19 @@
+﻿<Window x:Class="PaginationSample.RestoranHelp"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PaginationSample"
+        mc:Ignorable="d"
+        Title="RestoranHelp" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="baseGrid1" ItemsSource="{Binding Data}" />
+        <DataGrid Grid.Column="1" DataContext="{Binding ElementName=baseGrid1, Path=SelectedItem}" ItemsSource="{Binding Meals}" />
+        <DataGrid Grid.Column="2" DataContext="{Binding ElementName=baseGrid1, Path=SelectedItem}" ItemsSource="{Binding Drinks}" />
+    </Grid>
+</Window>

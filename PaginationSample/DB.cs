@@ -27,7 +27,7 @@ namespace PaginationSample
             sb.Server = "192.168.200.13";
             sb.UserID = "student";
             sb.Password = "student";
-            sb.Database = "1125_students";
+            sb.Database = "Rectoran1125";
             sb.CharacterSet = "utf8";
             connection = new MySqlConnection(
                 sb.ToString());
@@ -54,6 +54,103 @@ namespace PaginationSample
                     }
                 }
                CloseConnection();
+            }
+            return result;
+        }
+
+        internal List<Order> GetOrders()
+        {
+            List<Order> result = new List<Order>();
+            string sql = "SELECT o.id, o.idperson, o.idtable, " +
+            "td.id AS 'drink_id', td.title AS 'drink_title', td.type, td.cost AS 'drink_cost', td.volume, " +
+            "tt.number, tp.FIO, tt.title AS 'table_title', " +
+            "tm.id AS 'meal_id', tm.title AS 'meal_title', tm.cost AS 'meal_cost', tm.kalories, tm.gramm " +
+            "FROM tbl_order o " +
+            "LEFT JOIN tbl_order_drinks d ON o.id = d.idorder " +
+            "LEFT JOIN tbl_order_meal m ON o.id = m.idorder " +
+            "LEFT JOIN tbl_drinks td ON d.iddrinks = td.id " +
+            "LEFT JOIN tbl_meal tm ON m.idmeal = tm.id " +
+            "LEFT JOIN tbl_person tp ON o.idperson = tp.id " +
+            "LEFT JOIN tbl_table tt ON o.idtable = tt.id ";
+            if (OpenConnection())
+            {
+                Dictionary<int, Drink> drinks = new Dictionary<int, Drink>();
+                Dictionary<int, Meal> meals = new Dictionary<int, Meal>();
+                Dictionary<int, Order> orders = new Dictionary<int, Order>();
+
+                using (var mc = new MySqlCommand(sql, Connection))
+                using (var dr  = mc.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var id = dr.GetInt32("id");
+                        Order order;
+                        if (orders.ContainsKey(id))
+                            order = orders[id];
+                        else
+                        {
+                            order = new Order
+                            {
+                                ID = id,
+                                IdPerson = dr.GetInt32("idperson"),
+                                IdTable = dr.GetInt32("idtable"),
+                            };
+
+                            order.Table = new Table
+                            {
+                                ID = dr.GetInt32("idtable"),
+                                Number = dr.GetInt32("number"),
+                                Title = dr.GetString("table_title")
+                            };
+
+                            order.Person = new Person
+                            {
+                                ID = dr.GetInt32("idperson"),
+                                FIO = dr.GetString("FIO")
+                            };
+                            orders.Add(id, order);
+                        }
+
+                        if (!dr.IsDBNull(3))
+                        {
+                            var drink_id = dr.GetInt32("drink_id");
+
+                            if (!drinks.ContainsKey(drink_id))
+                            {
+                                drinks.Add(drink_id, new Drink
+                                {
+                                    ID = drink_id,
+                                    Title = dr.GetString("drink_title"),
+                                    Type = dr.GetString("type"),
+                                    Cost = dr.GetInt32("drink_cost"),
+                                    Volume = dr.GetInt32("volume")
+                                });
+                                order.Drinks.Add(drinks[drink_id]);
+                            }
+                        }
+
+                        if (!dr.IsDBNull(11))
+                        {
+                            var meal_id = dr.GetInt32("meal_id");
+
+                            if (!meals.ContainsKey(meal_id))
+                            {
+                                meals.Add(meal_id, new Meal
+                                {
+                                    ID = meal_id,
+                                    Title = dr.GetString("meal_title"),
+                                    Kalories = dr.GetInt32("kalories"),
+                                    Cost = dr.GetInt32("meal_cost"),
+                                    Gramm = dr.GetInt32("gramm")
+                                });
+                                order.Meals.Add(meals[meal_id]);
+                            }
+                        }
+                    }
+                }
+
+                result = new List<Order>(orders.Values);
+                CloseConnection();
             }
             return result;
         }

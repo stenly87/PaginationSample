@@ -76,6 +76,8 @@ namespace PaginationSample
         public ListCross()
         {
             InitializeComponent();
+
+
             Prepods = DB.GetInstance().GetPrepods("");
             Disciplines = DB.GetInstance().GetDisciplines("");
             DayOfWeeks = Enum.GetValues<DayOfWeek>().ToList();
