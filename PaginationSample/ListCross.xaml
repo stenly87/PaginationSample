@@ -1,0 +1,48 @@
+﻿<Window x:Class="PaginationSample.ListCross"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PaginationSample"
+        mc:Ignorable="d"
+        Title="ListCross" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Дисциплины, которые ведет препод: "/>
+            <ComboBox MinWidth="200" ItemsSource="{Binding Prepods}"
+                      SelectedItem="{Binding SelectedPrepod}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Text="Преподы, которые ведут дисциплину: "/>
+            <ComboBox MinWidth="200" ItemsSource="{Binding Disciplines}"
+                      SelectedItem="{Binding SelectedDiscipline}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock Text="Что происходит в выбранный день: "/>
+            <ComboBox MinWidth="200" ItemsSource="{Binding DayOfWeeks}"
+                      SelectedItem="{Binding SelectedDayOfWeek}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3">
+            <Button Content="Искать по всем параметрам сразу" Click="searchAll"/>
+        </StackPanel>
+        <ListView Grid.Row="5" ItemsSource="{Binding Data}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Дисциплина" DisplayMemberBinding="{Binding Discipline.Title}"/>
+                    <GridViewColumn Header="День недели" DisplayMemberBinding="{Binding DayOfWeek}"/>
+                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Prepod.FirstName}"/>
+                    <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding Prepod.LastName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

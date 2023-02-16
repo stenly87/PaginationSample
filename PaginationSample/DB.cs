@@ -58,6 +58,39 @@ namespace PaginationSample
             return result;
         }
 
+        internal List<CrossPrepodDiscipline> GetCrossPrepodDisciplinesInfo(string whereSql)
+        {
+            string sql = "SELECT c.id, c.idPrepod, c.idDiscipline, c.dayOfWeek, td.title, tp.firstName, tp.lastName FROM crossPrepodDiscipline c JOIN tbl_prepods tp ON c.idPrepod = tp.id JOIN tbl_discipline td ON c.idDiscipline = td.id " + whereSql;
+            List<CrossPrepodDiscipline> result = new List<CrossPrepodDiscipline>();
+            if (OpenConnection())
+            {
+                using (var mc = new MySqlCommand(sql, connection))
+                using (var dr = mc.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        result.Add(new CrossPrepodDiscipline { 
+                          Id = dr.GetInt32("id"),
+                          IdPrepod = dr.GetInt32("idPrepod"),
+                          IdDiscipline = dr.GetInt32("idDiscipline"),
+                          DayOfWeek = (DayOfWeek)dr.GetInt32("dayOfWeek"),
+                          Discipline = new Discipline {
+                           ID = dr.GetInt32("idDiscipline"),
+                           Title = dr.GetString("title"),
+                          },
+                          Prepod = new Prepod {
+                              ID = dr.GetInt32("idPrepod"),
+                              FirstName = dr.GetString("firstName"),
+                              LastName = dr.GetString("lastName"),
+                          }
+                        });
+                    }
+                }
+                CloseConnection();
+            }
+            return result;
+        }
+
         internal bool CreatePrepodDisciplineCross(Prepod selectedPrepod, Discipline selectedDiscipline, DayOfWeek selectedDay)
         {
             int rows = 0;

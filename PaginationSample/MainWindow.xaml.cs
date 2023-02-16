@@ -65,6 +65,8 @@ namespace PaginationSample
             ViewRowsVariants = new List<int>() { 5, 10, 15 };
 
             buttonToStart(this, null);
+
+            DB.GetInstance().GetCrossPrepodDisciplinesInfo("where idPrepod = 4");
         }
 
         void Signal([CallerMemberName] string prop = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
